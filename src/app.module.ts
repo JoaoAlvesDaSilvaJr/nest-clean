@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { z } from 'zod';
+import { PrismaModule } from '../prisma/prisma.module';
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
@@ -15,6 +16,7 @@ const envSchema = z.object({
       envFilePath: '.env',
       validate: (config) => envSchema.parse(config),
     }),
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
