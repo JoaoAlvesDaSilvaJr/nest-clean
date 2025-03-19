@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { ConfigModule } from '@nestjs/config';
 import { z } from 'zod';
 import { PrismaModule } from '../prisma/prisma.module';
+import { CreateAccountController } from './controllers/create-accounts.controller';
 
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
@@ -18,7 +18,7 @@ const envSchema = z.object({
     }),
     PrismaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [CreateAccountController],
+  providers: [],
 })
 export class AppModule {}
