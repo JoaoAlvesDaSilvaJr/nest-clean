@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  password_hash String
+  isAdmin       Boolean? @default(false) // isAdmin  (opcional)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+
+  @@map("users")
+}
+
+model Product {
+  id         String   @id @default(uuid()) // ID único gerado automaticamente usando UUID
+  name       String // Nome do produto
+  value      Float // Valor do produto
+  quantity   Int // Quantidade do produto
+  created_at DateTime @default(now()) // Data de criação com valor padrão sendo a data atual
+  updatedAt  DateTime @updatedAt // Data de atualização automática
+  orders     Order[] // Relacionamento com pedidos, um produto pode estar em vários pedidos
+
+  @@map("products") // Nome da tabela no banco de dados será "products"
+}
+
+model Client {
+  id          String   @id @default(uuid()) // ID único gerado automaticamente usando UUID
+  name        String // Nome do cliente
+  email       String   @unique // Email único do cliente
+  phone       String? // Número de telefone do cliente (opcional)
+  address     String? // Endereço do cliente (opcional)
+  description String? // Descrição do cliente (opcional)
+  createdAt   DateTime @default(now()) // Data de criação do cliente
+  updatedAt   DateTime @updatedAt // Data de atualização do cliente
+  orders      Order[] // Relacionamento com pedidos, um cliente pode ter vários pedidos
+
+  @@map("clients") // Nome da tabela no banco de dados será "clients"
+}
+
+enum PaymentMethod {
+  PIX
+  DINHEIRO
+  CARTAO_DEBITO
+  CARTAO_CREDITO
+}
+
+model Order {
+  id            String        @id @default(uuid()) // ID único gerado automaticamente usando UUID
+  createdAt     DateTime      @default(now()) // Data de criação do pedido
+  updatedAt     DateTime      @updatedAt // Data de atualização do pedido
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id]) // Relacionamento com o modelo Client. Cada pedido pertence a um cliente.
+  products      Product[] // Relacionamento com o modelo Product. Um pedido pode ter vários produtos.
+  totalValue    Float // Valor total do serviço
+  userId        String?
+  User          User?         @relation(fields: [userId], references: [id])
+  description   String // Descrição do pedido
+  discount      Float // Desconto aplicado ao pedido
+  paymentMethod PaymentMethod // Forma de pagamento (pix, dinheiro, cartao debito, cartao de credito)
+
+  @@map("orders") // Nome da tabela no banco de dados será "orders"
+}

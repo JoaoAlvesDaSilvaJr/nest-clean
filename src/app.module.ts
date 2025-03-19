@@ -5,15 +5,15 @@ import { ConfigModule } from '@nestjs/config';
 import { z } from 'zod';
 
 const envSchema = z.object({
-  PORT: z.coerce.number().default(3333), // Converte para número e define um valor padrão
+  PORT: z.coerce.number().default(3333),
 });
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Torna as variáveis de ambiente disponíveis globalmente
-      envFilePath: '.env', // Especifica o arquivo .env a ser carregado
-      validate: (config) => envSchema.parse(config), // Valida as variáveis de ambiente
+      isGlobal: true,
+      envFilePath: '.env',
+      validate: (config) => envSchema.parse(config),
     }),
   ],
   controllers: [AppController],
