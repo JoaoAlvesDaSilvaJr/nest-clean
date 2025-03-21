@@ -6,6 +6,8 @@ import { CreateAccountController } from './controllers/create-accounts.controlle
 import { envSchema } from './env';
 import { AuthModule } from './auth/auth.module';
 import { AuthenticateController } from './controllers/authenticate.controller';
+import { CreateProductsController } from './controllers/create-products.controller';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
@@ -16,7 +18,11 @@ import { AuthenticateController } from './controllers/authenticate.controller';
     PrismaModule,
     AuthModule,
   ],
-  controllers: [CreateAccountController, AuthenticateController],
-  providers: [],
+  controllers: [
+    CreateAccountController,
+    AuthenticateController,
+    CreateProductsController,
+  ],
+  providers: [JwtStrategy],
 })
 export class AppModule {}

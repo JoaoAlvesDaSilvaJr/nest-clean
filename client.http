@@ -1,4 +1,6 @@
 @baseUrl = http://localhost:3333
+@authToken = {{sessions.response.body.access_token}}
+
 
 # @name create_account_is_admin
 # @description Create a new account
@@ -29,6 +31,7 @@ Content-Type: application/json
 
 ###
 
+# @name sessions
 POST {{baseUrl}}/sessions
 Content-Type: application/json
 
@@ -36,3 +39,13 @@ Content-Type: application/json
   "email": "isAdmin@mail.com",
   "password": "123456"
 }
+
+
+###
+
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+
