@@ -8,7 +8,7 @@ import { ZodValidationPipe } from 'src/pipes/zod-validation-pipes';
 const createAccountBodySchema = z.object({
   email: z.string().email(),
   name: z.string(),
-  password_hash: z.string(),
+  password: z.string(),
   isAdmin: z.boolean(),
 });
 
@@ -25,7 +25,7 @@ export class CreateAccountController {
     @Body()
     body: CreateAccountBodySchema,
   ) {
-    const { email, name, password_hash, isAdmin } = body;
+    const { email, name, password, isAdmin } = body;
 
     const userWithSameEmail = await this.prisma.user.findUnique({
       where: {
@@ -39,7 +39,7 @@ export class CreateAccountController {
       );
     }
 
-    const hashedPassword = await hash(password_hash, 8);
+    const hashedPassword = await hash(password, 8);
 
     await this.prisma.user.create({
       data: {

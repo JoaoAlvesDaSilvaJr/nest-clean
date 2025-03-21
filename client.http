@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3333
 
-# @name create_account
+# @name create_account_is_admin
 # @description Create a new account
 # @method POST
 # @path /accounts
@@ -8,16 +8,24 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "John Doe 1",
-  "email": "rest1@mail.com",
-  "password_hash": "123456",
+  "name": "John Doe",
+  "email": "isAdmin@mail.com",
+  "password": "123456",
   "isAdmin": true
 }
 
 ###
 
-GET  {{baseUrl}}/accounts
+# @name create_account_is_not_admin
+POST {{baseUrl}}/accounts
 Content-Type: application/json
+
+{
+  "name": "Not John Doe",
+  "email": "notAdmin@mail.com",
+  "password": "654321",
+  "isAdmin": false
+}
 
 ###
 
@@ -25,6 +33,6 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "test@mail.com",
-  "password_hash": "123456"
+  "email": "isAdmin@mail.com",
+  "password": "123456"
 }
