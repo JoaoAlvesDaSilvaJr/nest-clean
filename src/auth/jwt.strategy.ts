@@ -6,11 +6,11 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Env } from 'src/env';
 import { z } from 'zod';
 
-const tokenSchema = z.object({
+const tokenPayloadSchema = z.object({
   sub: z.string().uuid(),
 });
 
-type TokenSchema = z.infer<typeof tokenSchema>;
+export type UserPayload = z.infer<typeof tokenPayloadSchema>;
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -25,8 +25,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: TokenSchema) {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async validate(payload: UserPayload) {
     //original com  async
-    return tokenSchema.parse(payload);
+    return tokenPayloadSchema.parse(payload);
   }
 }
