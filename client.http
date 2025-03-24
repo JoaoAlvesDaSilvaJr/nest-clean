@@ -47,5 +47,11 @@ POST {{baseUrl}}/products
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
+{
+  "name": "Cadeira",
+  "value": 5,
+  "quantity": 200
+}
+
 
 
