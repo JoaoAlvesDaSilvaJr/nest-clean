@@ -63,11 +63,11 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Chico",
-  "email": "test@mail.com",
-  "phone": "(61) 99999-9999",
-  "address": "Rua 1",
-  "description": "Cliente chato"
+  "name": "Maria Silva",
+  "email": "maria@example.com",
+  "phone": "(11) 98765-4321",
+  "address": "Av. Paulista, 1000",
+  "description": "Cliente preferencial"
 }
 
 ###
