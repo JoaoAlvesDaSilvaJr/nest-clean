@@ -81,11 +81,11 @@ Authorization: Bearer {{authToken}}
   "products": [
     {
       "productId": "12619d21-769c-49ec-bd14-1cfecf1e7143",
-      "quantity": 5
+      "quantity": 10
     },
     {
       "productId": "c90d9339-8577-4492-a286-76630975f6f9",
-      "quantity": 10
+      "quantity": 5
     }
   ],
   "description": "aluguel do jogo",
