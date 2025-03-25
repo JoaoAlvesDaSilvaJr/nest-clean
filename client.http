@@ -80,11 +80,11 @@ Authorization: Bearer {{authToken}}
   "clientId": "d618d92e-3f6b-4969-b86a-949189b67790",
   "products": [
     {
-      "productId": "3554aa68-4f1f-475d-8437-577fedbe3ba8",
+      "productId": "12619d21-769c-49ec-bd14-1cfecf1e7143",
       "quantity": 5
     },
     {
-      "productId": "5275d7da-2165-44a7-9c96-3da2a08b23d1",
+      "productId": "c90d9339-8577-4492-a286-76630975f6f9",
       "quantity": 10
     }
   ],

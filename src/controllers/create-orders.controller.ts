@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UseGuards } from '@nestjs/common';
 import { Body, Controller, Post } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
@@ -79,6 +80,21 @@ export class CreateOrdersController {
       },
     });
 
-    return newOrder;
+    // Atualizar a quantidade de cada produto no banco
+    for (const productInRequest of products) {
+      const productData = await this.prisma.product.update({
+        where: {
+          id: productInRequest.productId,
+        },
+        data: {
+          quantity: {
+            decrement: productInRequest.quantity, // Subtrai a quantidade dos produtos
+          },
+        },
+      });
+    }
+    console.log(productData);
+
+    return { message: { newOrder, productData } };
   }
 }
