@@ -49,10 +49,11 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Cadeira",
+  "name": "Cadeiras",
   "value": 5,
-  "quantity": 200
+  "quantity": 1000
 }
+
 
 ###
 
