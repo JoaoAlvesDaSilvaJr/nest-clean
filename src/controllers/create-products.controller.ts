@@ -28,14 +28,18 @@ export class CreateProductsController {
     const { name, value, quantity } = body;
     const { sub: userId } = user;
 
-    console.log('User ID:', userId);
+    if (!userId || typeof userId !== 'object' || !('sub' in userId)) {
+      throw new Error('User not authenticated or invalid format');
+    }
 
-    await this.prisma.product.create({
+    const product = await this.prisma.product.create({
       data: {
         name,
         value,
         quantity,
       },
     });
+
+    return { message: product.id };
   }
 }

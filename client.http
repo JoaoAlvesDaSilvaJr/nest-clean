@@ -43,6 +43,7 @@ Content-Type: application/json
 
 ###
 
+# @name create_product
 POST {{baseUrl}}/products
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
@@ -52,6 +53,47 @@ Authorization: Bearer {{authToken}}
   "value": 5,
   "quantity": 200
 }
+
+###
+
+# @name create_client
+POST {{baseUrl}}/clients
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Chico",
+  "email": "test@mail.com",
+  "phone": "(61) 99999-9999",
+  "address": "Rua 1",
+  "description": "Cliente chato"
+}
+
+###
+
+# @name create_order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "clientId": "d618d92e-3f6b-4969-b86a-949189b67790",
+  "products": [
+    {
+      "productId": "3554aa68-4f1f-475d-8437-577fedbe3ba8",
+      "quantity": 5
+    },
+    {
+      "productId": "5275d7da-2165-44a7-9c96-3da2a08b23d1",
+      "quantity": 10
+    }
+  ],
+  "description": "aluguel do jogo",
+  "discount": 10,
+  "paymentMethod": "PIX"
+}
+
+
 
 
 

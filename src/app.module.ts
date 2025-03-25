@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { AuthenticateController } from './controllers/authenticate.controller';
 import { CreateProductsController } from './controllers/create-products.controller';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { CreateClientController } from './controllers/create-clients.controller';
+import { CreateOrdersController } from './controllers/create-orders.controller';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { JwtStrategy } from './auth/jwt.strategy';
     CreateAccountController,
     AuthenticateController,
     CreateProductsController,
+    CreateClientController,
+    CreateOrdersController,
   ],
   providers: [JwtStrategy],
 })
