@@ -4,6 +4,7 @@ import {
   Post,
   UseGuards,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from 'prisma/prisma.service';
@@ -83,35 +84,62 @@ export class CreateClientController {
     @Body(new ZodValidationPipe(createClientsBodySchema))
     body: CreateClientsBodySchema,
   ) {
-    const { email, name, phone, address, description } = body;
+    try {
+      const { email, name, phone, address, description } = body;
 
-    // Verificação de duplicatas em paralelo
-    const [emailConflict, nameConflict, phoneConflict] = await Promise.all([
-      this.checkEmailConflict(email),
-      this.checkNameConflict(name),
-      phone ? this.checkPhoneConflict(phone) : null,
-    ]);
+      // Verificação de duplicatas em paralelo com tratamento de erro
+      const [emailConflict, nameConflict, phoneConflict] = await Promise.all([
+        this.checkEmailConflict(email),
+        this.checkNameConflict(name),
+        phone ? this.checkPhoneConflict(phone) : null,
+      ]).catch((error) => {
+        console.error('Error checking conflicts:', error);
+        throw new InternalServerErrorException('Error verifying client data');
+      });
 
-    // Verificação de conflitos
-    this.verifyConflicts(emailConflict, nameConflict, phoneConflict);
+      // Verificação de conflitos
+      this.verifyConflicts(emailConflict, nameConflict, phoneConflict);
 
-    // Criação do cliente
-    const client = await this.prisma.client.create({
-      data: { email, name, phone, address, description },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        createdAt: true,
-      },
-    });
+      // Criação do cliente com tratamento de erro
+      const client = await this.prisma.client
+        .create({
+          data: {
+            email,
+            name,
+            phone,
+            address,
+            description,
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            createdAt: true,
+          },
+        })
+        .catch((error) => {
+          console.error('Database error:', error);
+          throw new InternalServerErrorException('Error creating client');
+        });
 
-    return {
-      success: true,
-      client,
-      message: 'Cliente criado com sucesso',
-    };
+      return {
+        success: true,
+        client,
+        message: 'Cliente criado com sucesso',
+      };
+    } catch (error) {
+      // Se já for uma exceção HTTP, repassa
+      if (
+        error instanceof ConflictException ||
+        error instanceof InternalServerErrorException
+      ) {
+        throw error;
+      }
+      // Outros erros são tratados como 500
+      console.error('Unexpected error:', error);
+      throw new InternalServerErrorException('An unexpected error occurred');
+    }
   }
 
   private async checkEmailConflict(email: string) {
@@ -137,13 +165,13 @@ export class CreateClientController {
       if (!conflict) continue;
 
       if ('email' in conflict) {
-        throw new ConflictException('E-mail já cadastrado');
+        throw new ConflictException('Email already registered');
       }
       if ('name' in conflict) {
-        throw new ConflictException('Nome já cadastrado');
+        throw new ConflictException('Name already registered');
       }
       if ('phone' in conflict) {
-        throw new ConflictException('Telefone já cadastrado');
+        throw new ConflictException('Phone already registered');
       }
     }
   }

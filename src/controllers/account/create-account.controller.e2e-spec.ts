@@ -41,5 +41,6 @@ describe('Accounts (E2E)', () => {
     });
 
     expect(userOnDatabase).toBeTruthy();
+    expect(response.statusCode).toBe(201);
   });
 });

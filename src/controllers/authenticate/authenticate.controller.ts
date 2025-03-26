@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
@@ -13,7 +14,7 @@ import { z } from 'zod';
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(1, 'Password cannot be empty'),
 });
 
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>;
@@ -29,6 +30,10 @@ export class AuthenticateController {
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body;
+
+    if (!password || password.trim() === '') {
+      throw new BadRequestException('Password cannot be empty');
+    }
 
     const user = await this.prisma.user.findUnique({
       where: { email },
