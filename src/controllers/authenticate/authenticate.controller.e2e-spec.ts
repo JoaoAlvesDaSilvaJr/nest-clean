@@ -4,8 +4,9 @@ import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { PrismaService } from 'prisma/prisma.service';
+import { hash } from 'bcryptjs';
 
-describe('Accounts (E2E)', () => {
+describe('Authenticate (E2E)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -24,15 +25,20 @@ describe('Accounts (E2E)', () => {
     await app.close();
   });
 
-  test('[POST] /accounts', async () => {
-    const response = await request(app.getHttpServer()).post('/accounts').send({
-      name: 'Not John Doe',
-      email: 'notAdmin@mail.com',
-      password: '654321',
-      isAdmin: false,
+  test('[POST] /sessions', async () => {
+    await prisma.user.create({
+      data: {
+        name: 'Not John Doe',
+        email: 'notAdmin@mail.com',
+        password_hash: await hash('654321', 8),
+        isAdmin: false,
+      },
     });
 
-    expect(response.statusCode).toBe(201);
+    const response = await request(app.getHttpServer()).post('/sessions').send({
+      email: 'notAdmin@mail.com',
+      password: '654321',
+    });
 
     const userOnDatabase = await prisma.user.findUnique({
       where: {
@@ -40,6 +46,9 @@ describe('Accounts (E2E)', () => {
       },
     });
 
-    expect(userOnDatabase).toBeTruthy();
+    expect(response.statusCode).toBe(201); // Ou outro código apropriado (200, 201, etc.)
+    expect(response.body).toEqual({
+      access_token: expect.any(String), // Verifica se existe um token do tipo string
+    });
   });
 });
